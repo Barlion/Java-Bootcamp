@@ -1,10 +1,13 @@
 import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Font
 import java.awt.GridLayout
 import javax.swing.*
 
 class QuizGUI : JFrame("Cybersecurity Awareness Quiz") {
     private val questionLabel: JLabel
-    private val optionButtons: Array<JRadioButton?>
+    private val optionButtons: Array<JRadioButton>
     private val nextButton: JButton
     private val submitButton: JButton
     private var currentQuestionIndex: Int
@@ -14,27 +17,41 @@ class QuizGUI : JFrame("Cybersecurity Awareness Quiz") {
     init {
         defaultCloseOperation = EXIT_ON_CLOSE
         layout = BorderLayout()
+        contentPane.background = Color(45, 46, 45) // Setting background color
 
         val questionPanel = JPanel(BorderLayout())
         questionLabel = JLabel()
+        questionLabel.foreground = Color.WHITE // Setting text color
+        questionLabel.font = Font("Arial", Font.BOLD, 16)
         questionPanel.add(questionLabel, BorderLayout.NORTH)
+        questionPanel.background = Color(45, 46, 45) // Setting background color
 
         val optionsPanel = JPanel(GridLayout(4, 1))
-        optionButtons = arrayOfNulls(4)
+        optionsPanel.background = Color(45, 46, 45) // Setting background color
+        optionButtons = Array(4) { JRadioButton() }
         val optionGroup = ButtonGroup()
         for (i in optionButtons.indices) {
-            optionButtons[i] = JRadioButton()
+            optionButtons[i].background = Color(45, 46, 45) // Setting background color
+            optionButtons[i].foreground = Color.WHITE // Setting text color
+            optionButtons[i].font = Font("Arial", Font.PLAIN, 14)
             optionGroup.add(optionButtons[i])
             optionsPanel.add(optionButtons[i])
         }
         questionPanel.add(optionsPanel, BorderLayout.CENTER)
 
         val buttonPanel = JPanel()
+        buttonPanel.background = Color(45, 46, 45) // Setting background color
         nextButton = JButton("Next")
+        nextButton.background = Color(40, 18, 201) // Setting button color
+        nextButton.foreground = Color.WHITE // Setting text color
+        nextButton.font = Font("Arial", Font.BOLD, 14)
         nextButton.addActionListener { displayNextQuestion() }
         buttonPanel.add(nextButton)
 
         submitButton = JButton("Submit")
+        submitButton.background = Color(40, 18, 201) // Setting button color
+        submitButton.foreground = Color.WHITE // Setting text color
+        submitButton.font = Font("Arial", Font.BOLD, 14)
         submitButton.addActionListener { submitQuiz() }
         buttonPanel.add(submitButton)
         submitButton.isEnabled = false // Initially disabled until last question
@@ -64,13 +81,13 @@ class QuizGUI : JFrame("Cybersecurity Awareness Quiz") {
         val index = selectedIndices.elementAt(currentQuestionIndex)
         questionLabel.text = "Scenario #${currentQuestionIndex + 1}: ${questions[index]}"
         for (i in optionButtons.indices) {
-            optionButtons[i]?.text = options[index][i]
-            optionButtons[i]?.isSelected = false
+            optionButtons[i].text = options[index][i]
+            optionButtons[i].isSelected = false
         }
     }
 
     private fun displayNextQuestion() {
-        if (currentQuestionIndex < questions.size - 1) {
+        if (currentQuestionIndex < selectedIndices.size - 1) {
             currentQuestionIndex++
             displayQuestion()
             nextButton.isEnabled = true
@@ -81,20 +98,37 @@ class QuizGUI : JFrame("Cybersecurity Awareness Quiz") {
         }
     }
 
-
-
-
     private fun submitQuiz() {
         score = 0
-        for (i in optionButtons.indices) {
-            if (optionButtons[i]?.isSelected == true && options[currentQuestionIndex][i].startsWith("A")) {
+        for (index in selectedIndices) {
+            val selectedOptionIndex = getSelectedOptionIndex()
+            val correctAnswer = getCorrectAnswer(index)
+            val answer = when (selectedOptionIndex) {
+                0 -> "A"
+                1 -> "B"
+                2 -> "C"
+                3 -> "D"
+                else -> "" // Handle the case where no option is selected
+            }
+            if (answer == correctAnswer) {
                 score++
             }
         }
         JOptionPane.showMessageDialog(this, "Quiz submitted! Score: $score out of 10")
     }
 
+    private fun getSelectedOptionIndex(): Int {
+        for (i in optionButtons.indices) {
+            if (optionButtons[i].isSelected) {
+                return i
+            }
+        }
+        return -1
+    }
 
+    private fun getCorrectAnswer(questionIndex: Int): String {
+        return answers[questionIndex]
+    }
 
     companion object {
         // Actual pool of questions and options
@@ -160,6 +194,12 @@ class QuizGUI : JFrame("Cybersecurity Awareness Quiz") {
             listOf("A - An evaluation of the security of an organization's systems and procedures", "B - A type of security incident", "C - A type of security breach", "D - None of the above"),
             listOf("A - Unauthorized access to a system", "B - A type of security breach", "C - A physical barrier", "D - None of the above"),
             listOf("A - Ensuring that security measures align with business objectives", "B - Ensuring compliance with security regulations", "C - A type of security breach", "D - None of the above")
+        )
+
+        private val answers = listOf(
+            "C", "C", "C", "C", "C", "B", "B", "C", "A", "C",
+            "B", "A", "A", "C", "A", "A", "B", "B", "A", "A",
+            "C", "A", "A", "A", "C", "A", "A", "A", "A", "A"
         )
 
         @JvmStatic
