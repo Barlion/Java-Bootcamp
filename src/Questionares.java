@@ -1,4 +1,3 @@
-package bootcamp;
 
 import java.awt.EventQueue;
 
