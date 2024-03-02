@@ -202,8 +202,7 @@ class QuizGUI : JFrame("Cybersecurity Awareness Quiz") {
             "C", "A", "A", "A", "C", "A", "A", "A", "A", "A"
         )
 
-        @JvmStatic
-        fun main(args: Array<String>) {
+                fun main(args: Array<String>) {
             SwingUtilities.invokeLater { QuizGUI() }
         }
     }

@@ -1,118 +1,91 @@
+import kotlin.random.Random
 
-import java.awt.EventQueue;
+fun main() {
+	// Welcome message and name collection
+	println("Welcome to the Cybersecurity Awareness Quiz!")
+	print("Please enter your first name: ")
+	val name = readLine() ?: ""
 
-import javax.swing.JFrame;
-import javax.swing.JTextField;
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+	// Generate questions and answers
+	val questions = generateQuestions(10)
 
-public class Questionares {
+	// Start the quiz
+	println("Hello, $name! Are you ready to begin the quiz? (y/n)")
+	val answer = readLine()?.toLowerCase() ?: ""
 
-	private JFrame frame;
-	private JTextField TextField1;
-	private JTextField Question;
+	if (answer == "y") {
+		var score = 0
+		for ((index, question) in questions.withIndex()) {
+			println("-------------------------------------------")
+			println("Question #${index + 1}: ${question.first}")
+			question.second.forEach { println(it) }
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Questionares window = new Questionares();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			print("Your answer: ")
+			val userAnswer = readLine()?.toUpperCase() ?: ""
+
+			if (userAnswer == question.second[question.third]) {
+				score++
 			}
-		});
-	}
+		}
 
-	/**
-	 * Create the application.
-	 */
-	public Questionares() {
-		initialize();
+		println("-------------------------------------------")
+		println("Your score: $score out of ${questions.size}")
+		println("Thank you for taking the Cybersecurity Awareness Quiz, $name!")
+	} else {
+		println("Thank you for your time!")
 	}
+}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(150, 233, 198));
-		frame.setBounds(100, 100, 1044, 737);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		TextField1 = new JTextField();
-		TextField1.setBackground(new Color(108, 34, 216));
-		TextField1.setForeground(new Color(150, 233, 198));
-		TextField1.setFont(new Font("Tahoma", Font.BOLD, 22));
-		TextField1.setHorizontalAlignment(SwingConstants.LEFT);
-		TextField1.setText("Question:");
-		TextField1.setBounds(239, 21, 387, 41);
-		frame.getContentPane().add(TextField1);
-		TextField1.setColumns(10);
-		
-		Question = new JTextField();
-		Question.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		Question.setBackground(new Color(131, 192, 193));
-		Question.setBounds(36, 82, 970, 154);
-		frame.getContentPane().add(Question);
-		Question.setColumns(10);
-		
-		JButton Submit = new JButton("SUBMIT");
-		Submit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		Submit.setForeground(new Color(150, 233, 198));
-		Submit.setBorderPainted(false);
-		Submit.setBackground(new Color(108, 34, 216));
-		Submit.setFont(new Font("Tahoma", Font.BOLD, 22));
-		Submit.setBounds(488, 635, 215, 41);
-		frame.getContentPane().add(Submit);
-		
-		JCheckBox option1 = new JCheckBox("New check box");
-		option1.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		option1.setBackground(new Color(131, 192, 193));
-		option1.setHorizontalAlignment(SwingConstants.LEFT);
-		option1.setBounds(36, 256, 970, 73);
-		frame.getContentPane().add(option1);
-		
-		JButton Next = new JButton("NEXT");
-		Next.setForeground(new Color(150, 233, 198));
-		Next.setFont(new Font("Tahoma", Font.BOLD, 22));
-		Next.setBorderPainted(false);
-		Next.setBackground(new Color(108, 34, 216));
-		Next.setBounds(738, 635, 215, 41);
-		frame.getContentPane().add(Next);
-		
-		JCheckBox option2 = new JCheckBox("New check box");
-		option2.setHorizontalAlignment(SwingConstants.LEFT);
-		option2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		option2.setBackground(new Color(131, 192, 193));
-		option2.setBounds(36, 348, 970, 73);
-		frame.getContentPane().add(option2);
-		
-		JCheckBox option3 = new JCheckBox("New check box");
-		option3.setHorizontalAlignment(SwingConstants.LEFT);
-		option3.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		option3.setBackground(new Color(131, 192, 193));
-		option3.setBounds(36, 444, 970, 73);
-		frame.getContentPane().add(option3);
-		
-		JCheckBox option4 = new JCheckBox("New check box");
-		option4.setHorizontalAlignment(SwingConstants.LEFT);
-		option4.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		option4.setBackground(new Color(131, 192, 193));
-		option4.setBounds(36, 539, 970, 73);
-		frame.getContentPane().add(option4);
-	}
+fun generateQuestions(numQuestions: Int): List<Pair<String, List<String>>> {
+		val questions = mutableListOf<Pair<String, List<String>>>()
+val random = Random(System.currentTimeMillis())
+
+    for (i in 0 until numQuestions) {
+// Generate question and incorrect options
+val question = "This is a cybersecurity question about $getRandomTopic()"
+val options = mutableListOf<String>()
+        for (j in 0 until 3) {
+		options.add(getRandomCybersecurityTerm())
+		}
+
+// Generate correct option and insert it randomly
+val correctOption = getRandomCybersecurityTerm()
+val correctIndex = random.nextInt(4)
+        options.add(correctIndex, correctOption)
+
+        questions.add(Pair(question, options))
+		}
+
+		return questions
+}
+
+fun getRandomTopic(): String {
+	val topics = listOf(
+			"phishing",
+			"passwords",
+			"firewalls",
+			"social engineering",
+			"malware",
+			"data breaches",
+			"encryption",
+			"two-factor authentication"
+	)
+	return topics[Random(System.currentTimeMillis()).nextInt(topics.size)]
+}
+
+fun getRandomCybersecurityTerm(): String {
+	val terms = listOf(
+			"spam",
+			"virus",
+			"biometrics",
+			"vulnerability",
+			"patch",
+			"VPN",
+			"access control",
+			"brute force attack",
+			"DDoS attack",
+			"ransomware",
+			"security awareness training"
+	)
+	return terms[Random(System.currentTimeMillis()).nextInt(terms.size)]
 }
